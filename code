@@ -1,0 +1,313 @@
+#include<fstream>
+#include<iostream>
+#include<cstring>
+#include<cstdlib>
+using namespace std;
+
+
+
+class calender
+{
+protected:
+
+    public:
+        virtual void show()=0;
+
+};
+
+class MONTH:public calender
+{
+    protected:
+        int istartDay,iNumOfDays,mon_num,iyear;
+        int month[12]={31,28,31,30,31,30,31,31,30,31,30,31};
+
+    public:
+
+        void get_month()
+        {
+            cout<<"enter the month\n";
+            cin>>mon_num;
+            cout<<"enter the startday of the month\n";
+            cin>>istartDay;
+            mon_num+=1;
+        }
+        void leap(int iyear)
+        {
+
+                if((((iyear%4==0)&&(iyear%100!=0))||(iyear%400==0)))
+                {
+                    cout<<"LEAP YEAR\n";
+                    month[1]=29;
+                }
+                else{
+                    month[1]=28;
+                }
+
+            }
+        void show()
+        {
+
+
+            mon_num=mon_num-2;
+            cout<<"THE MONTH IS:\n";
+            switch(mon_num)
+            {
+                case 0:cout<<"JANUARY\n";
+                break;
+                case 1:cout<<"FEBRUARY\n";
+                break;
+                case 2:cout<<"MARCH\n";
+                break;
+                case 3:cout<<"APRIL\n";
+                break;
+                case 4:cout<<"MAY\n";
+                break;
+                case 5:cout<<"JUNE\n";
+                break;
+                break;
+                case 6:cout<<"JULY\n";
+                break;
+                case 7:cout<<"AUGUST\n";
+                break;
+                case 8:cout<<"SEPTEMBER\n";
+                break;
+                case 9:cout<<"OCTOBER\n";
+                break;
+                case 10:cout<<"NOVEMBER\n";
+                break;
+                case 11:cout<<"DECEMBER\n";
+                break;
+
+
+            }
+            cout<<"\n";
+            int i,x;
+            iNumOfDays=month[mon_num];
+            cout<<"The number of days in the month is:\n"<<iNumOfDays<<endl;
+
+            try{
+
+                            if(istartDay < 0 || istartDay > 6 || iNumOfDays >31 || iNumOfDays <28)
+                                throw(x);
+                            }catch(int a){
+                     cout<<"Invalid input\n";
+                     exit(0);
+            }
+
+
+        cout<<"\n";
+        cout.width(8);
+        cout<<"MON";
+        cout.width(8);
+        cout<<"TUE";
+        cout.width(8);
+        cout<<"WED";
+        cout.width(8);
+        cout<<"THU";
+        cout.width(8);
+        cout<<"FRI";
+        cout.width(8);
+        cout<<"SAT";
+        cout.width(8);
+        cout<<"SUN";
+        cout.width(8);
+        cout<<"\n";
+        for(i=0;i<istartDay;i++)
+        cout.width(8);
+        cout<<" ";
+        i=1;
+        while(i<=iNumOfDays)
+
+        {
+            cout.width(8);
+            cout<<i;
+            if(0 == (i+istartDay)%7)
+            {
+                cout<<"\n";
+            }
+            i++;
+        }
+
+      }
+
+        int& operator[](int x)
+        {
+            if(x<=0||x>12)
+            {
+
+                cout<<"invalid input\n";
+                exit(0);
+            }
+            else
+                    return month[x];
+        }
+};
+
+
+class LEAP
+{
+    int leapyear;
+    public:
+        void check_leap()
+        {
+            if(leapyear%4==0)
+            {
+                if(leapyear%100==0)
+                {
+                   if(leapyear%400==0)
+                        cout<<leapyear<<"is a leap year\n";
+                else
+                    cout<<leapyear<<"is not a leap year\n";
+
+            }
+            else
+                cout<<leapyear<<"is a leap year\n";
+            }
+            else
+                cout<<"is not a leap year\n";
+        }
+
+        void get_input()
+
+        {
+             cout<<"Enter the year to check\n";
+                cin>>leapyear;
+        }
+};
+class GETDAY: virtual public MONTH
+{
+    protected:
+        int y1,d1,i,r,s;
+
+        char week[7][10];
+    public:
+        void get_info()
+        {
+            cout<<"Enter the day, month and year\n";
+            cin>>d1>>mon_num>>y1;
+        }
+        void show()
+        {
+            s=0;
+            strcpy(week[0],"SUNDAY");
+            strcpy(week[1],"MONDAY");
+            strcpy(week[2],"TUESDAY");
+            strcpy(week[3],"WEDNESDAY");
+            strcpy(week[4],"THURSDAY");
+            strcpy(week[5],"FRIDAY");
+            strcpy(week[6],"SATURDAY");
+
+            static int t[]={0,3,2,5,0,3,5,1,4,6,2,4};
+            y1-=mon_num<3;
+            s=(y1+y1/4-y1/100+y1/400+t[mon_num-1]+d1)%7;
+            cout<<"\nTHE DAY IS:\t";
+            cout<<week[s]<<endl;
+}
+};
+
+
+
+class NOTE
+{
+    protected:
+     int rday,rmonth,ryear,x;
+     string str;
+    public:
+
+        void get_date()
+        {
+            cout<<"enter the date to add a note\n";
+                cout<<"dd/mm/yy\n";
+                cin>>rday>>rmonth>>ryear;
+        }
+        void get_string()
+        {
+            cout<<"enter the string\n";
+            cin>>str;
+        }
+        void add()
+        {
+
+        ofstream fout("notes2");
+        fout<<str;
+        cout<<"Note is added\n";
+        fout.close();
+
+        }
+         void get_print(NOTE N1)
+        {
+            try
+            {
+
+            if(rday==N1.rday&&rmonth==N1.rmonth&&ryear==N1.ryear)
+            {
+
+                ifstream out("notes2");
+                out>>str;
+                cout<<"\n";
+                cout<<"The note added was:\n";
+                cout<<str<<"\n";
+                out.close();
+            }
+            else
+                throw(x);
+        }catch(int i)
+        {
+            cout<<"no notes to display\n";
+        }
+        }
+};
+
+
+int main()
+{
+    while(1)
+    {
+        calender *ptr1,*ptr2;
+         MONTH m;
+        ptr1=&m;
+        GETDAY g;
+        ptr2=&g;
+        NOTE N1,N2;
+        int value,iyear;
+        cout<<"\n**********************************";
+
+        cout<<"\n1.PRINT A MONTH\n2.CHECK FOR A LEAP YEAR\n3.GET THE DAY\n4.ADD NOTE\n5.VIEW NOTE\n6.EXIT\n"<<endl;
+        cout<<"\nEnter the operation to be done\n";
+        cin>>value;
+
+        switch(value)
+        {
+            case 1:
+                    cout<<"enter the year\n";
+                    cin>>iyear;
+                     m.get_month();
+
+                    m.leap(iyear);
+                    ptr1->show();
+                    break;
+            case 2:
+
+                    LEAP l;
+                    l.get_input();
+                    l.check_leap();
+                    break;
+           case 3:
+                    g.get_info();
+                    ptr2->show();
+                    break;
+            case 4: N1.get_date();
+                    N1.get_string();
+                    N1.add();
+                    break;
+            case 5:
+                    N2.get_date();
+                    N2.get_print(N1);
+                    break;
+            case 6 : exit(0);
+        }
+    }
+return 0;
+}
+
+
